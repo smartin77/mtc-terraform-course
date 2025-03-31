@@ -1,2 +1,3 @@
-repo_count = 2
-env        = "dev"
+repo_max = 2
+env      = "dev"
+repos    = ["infra", "backend"]

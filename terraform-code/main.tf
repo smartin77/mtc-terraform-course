@@ -4,6 +4,9 @@ resource "github_repository" "mtc_repo" {
   description = "${each.value} Code for MTC"
   visibility  = var.env == "dev" ? "private" : "public"
   auto_init   = true
+  provisioner "local-exec" {
+    command = "gh repo view ${self.name} --web"
+  }
 }
 
 resource "github_repository_file" "readme" {
@@ -24,8 +27,8 @@ resource "github_repository_file" "index" {
   overwrite_on_create = true
 }
 
-# output "clone-urls" {
-#   value       = { for i in github_repository.mtc_repo[*] : i.name => i.http_clone_url }
-#   description = "Repository Name and URLs"
-#   sensitive   = false
-# }
+output "clone-urls" {
+  value       = { for i in github_repository.mtc_repo : i.name => i.http_clone_url }
+  description = "Repository Name and URLs"
+  sensitive   = false
+}

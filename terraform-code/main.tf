@@ -29,11 +29,17 @@ resource "terraform_data" "repo-clone" {
 }
 
 resource "github_repository_file" "readme" {
-  for_each            = var.repos
-  repository          = github_repository.mtc_repo[each.key].name
-  branch              = "main"
-  file                = "README.md"
-  content             = "# This ${var.env} ${each.value.lang} repository is for ${each.key} developers. The infra was last modified by: ${data.github_user.current.name}"
+  for_each   = var.repos
+  repository = github_repository.mtc_repo[each.key].name
+  branch     = "main"
+  file       = "README.md"
+  content = templatefile("templates/readme.tfpl", {
+    env        = var.env
+    lang       = each.value.lang
+    repo       = each.key
+    authorname = data.github_user.current.name
+
+  })
   overwrite_on_create = true
   # lifecycle {
   #   ignore_changes = [

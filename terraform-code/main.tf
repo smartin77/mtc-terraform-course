@@ -1,8 +1,3 @@
-data "github_user" "current" {
-  username = ""
-}
-
-
 resource "github_repository" "mtc_repo" {
   for_each    = var.repos
   name        = "mtc-repo-${each.key}"
@@ -21,7 +16,7 @@ resource "github_repository" "mtc_repo" {
 
 resource "terraform_data" "repo-clone" {
   for_each   = var.repos
-  depends_on = [github_repository_file.index, github_repository_file.readme]
+  depends_on = [github_repository_file.main, github_repository_file.readme]
 
   provisioner "local-exec" {
     command = "gh repo clone ${github_repository.mtc_repo[each.key].name}"
@@ -48,7 +43,7 @@ resource "github_repository_file" "readme" {
   # }
 }
 
-resource "github_repository_file" "index" {
+resource "github_repository_file" "main" {
   for_each            = var.repos
   repository          = github_repository.mtc_repo[each.key].name
   branch              = "main"
@@ -62,8 +57,7 @@ resource "github_repository_file" "index" {
   }
 }
 
-output "clone-urls" {
-  value       = { for i in github_repository.mtc_repo : i.name => [i.ssh_clone_url, i.http_clone_url] }
-  description = "Repository Name and URLs"
-  sensitive   = false
-}
+# moved {
+#   from = github_repository_file.index
+#   to   = github_repository_file.main
+# }

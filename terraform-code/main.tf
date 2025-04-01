@@ -1,3 +1,8 @@
+data "github_user" "current" {
+  username = ""
+}
+
+
 resource "github_repository" "mtc_repo" {
   for_each    = var.repos
   name        = "mtc-repo-${each.key}"
@@ -28,8 +33,13 @@ resource "github_repository_file" "readme" {
   repository          = github_repository.mtc_repo[each.key].name
   branch              = "main"
   file                = "README.md"
-  content             = "# This ${var.env} ${each.value.lang} repository is for ${each.key} developers"
+  content             = "# This ${var.env} ${each.value.lang} repository is for ${each.key} developers. The infra was last modified by: ${data.github_user.current.name}"
   overwrite_on_create = true
+  # lifecycle {
+  #   ignore_changes = [
+  #     content,
+  #   ]
+  # }
 }
 
 resource "github_repository_file" "index" {
@@ -39,6 +49,11 @@ resource "github_repository_file" "index" {
   file                = each.value.filename
   content             = "#Hello ${each.value.lang}"
   overwrite_on_create = true
+  lifecycle {
+    ignore_changes = [
+      content,
+    ]
+  }
 }
 
 output "clone-urls" {

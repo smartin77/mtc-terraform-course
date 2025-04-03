@@ -1,6 +1,6 @@
 resource "github_repository" "mtc_repo" {
   for_each    = var.repos
-  name        = "mtc-repo-${each.key}"
+  name        = "mtc-${each.key}-${var.env}"
   description = "${each.value.lang} Code for MTC"
   visibility  = var.env == "dev" ? "private" : "public"
   auto_init   = true
@@ -38,7 +38,7 @@ resource "github_repository_file" "readme" {
   repository = github_repository.mtc_repo[each.key].name
   branch     = "main"
   file       = "README.md"
-  content = templatefile("templates/readme.tfpl", {
+  content = templatefile("${path.module}/templates/readme.tfpl", {
     env        = var.env
     lang       = each.value.lang
     repo       = each.key

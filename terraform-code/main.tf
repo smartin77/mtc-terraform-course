@@ -21,3 +21,7 @@ module "repos" {
   env      = each.key
   repos    = local.repos
 }
+
+output "repo-info" {
+  value = { for k,v in module.repos : k => v.clone-urls }
+}

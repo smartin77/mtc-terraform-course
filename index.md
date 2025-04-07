@@ -16,4 +16,4 @@ Hi, I'm Smartin77. Check out my repos!
 
 ---
 
-© Smartin77
+© Smartin77 2025

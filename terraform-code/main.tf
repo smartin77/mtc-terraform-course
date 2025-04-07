@@ -23,13 +23,14 @@ module "repos" {
 }
 
 module "deploy-key" {
-  for_each = toset(flatten([for k, v in module.repos : keys(v.clone-urls) if k == "dev"]))
+  for_each  = toset(flatten([for k, v in module.repos : keys(v.clone-urls) if k == "dev"]))
   source    = "./modules/deploy-key"
   repo_name = each.key
 }
 
-output "repo-info" {
-  value = { for k, v in module.repos : k => v.clone-urls }
+module "info-page" {
+  source = "./modules/info-page"
+  repos  = { for k, v in module.repos["prod"].clone-urls : k => v }
 }
 
 output "repo-list" {

@@ -37,3 +37,10 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore SSH private keys
+*.pem
+*.key
+
+# Ignore environment files
+.env

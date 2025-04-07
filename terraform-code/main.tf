@@ -9,6 +9,11 @@ locals {
       lang     = "python",
       filename = "main.py"
       pages    = false
+    },
+    frontend = {
+      lang     = "javascript",
+      filename = "main.js"
+      pages    = true
     }
   }
   environments = toset(["dev", "prod"])

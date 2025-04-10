@@ -4,18 +4,18 @@ resource "github_repository" "mtc_repo" {
   description = "${each.value.lang} Code for MTC"
   visibility  = var.env == "dev" ? "private" : "public"
   auto_init   = true
-  # dynamic "pages" {
-  #   for_each = each.value.pages ? [1] : []
-  #   content {
-  #     source {
-  #       branch = "main"
-  #       path   = "/"
-  #     }
-  #   }
-  # }
+  dynamic "pages" {
+    for_each = each.value.pages ? [1] : []
+    content {
+      source {
+        branch = "main"
+        path   = "/"
+      }
+    }
+  }
 
   provisioner "local-exec" {
-    command = "gh repo view ${self.name} --web"
+    command = var.run_provisioners ? "gh repo view ${self.name} --web" : "echo 'skip clone'"
   }
 
   provisioner "local-exec" {
@@ -29,7 +29,7 @@ resource "terraform_data" "repo-clone" {
   depends_on = [github_repository_file.main, github_repository_file.readme]
 
   provisioner "local-exec" {
-    command = "gh repo clone ${github_repository.mtc_repo[each.key].name}"
+    command = var.run_provisioners ? "gh repo clone ${github_repository.mtc_repo[each.key].name}" : "echo 'skip clone'"
   }
 }
 

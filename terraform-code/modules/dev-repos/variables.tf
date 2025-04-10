@@ -26,3 +26,8 @@ variable "repos" {
     error_message = "Please do not deploy more repos than the repo_max allows"
   }
 }
+
+variable "run_provisioners" {
+  type    = bool
+  default = false
+}

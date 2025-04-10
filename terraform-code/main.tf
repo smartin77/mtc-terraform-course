@@ -1,9 +1,10 @@
 module "repos" {
-  source   = "./modules/dev-repos"
-  for_each = var.environments
-  repo_max = 9
-  env      = each.key
-  repos    = local.repos
+  source           = "./modules/dev-repos"
+  for_each         = var.environments
+  repo_max         = 9
+  env              = each.key
+  repos            = local.repos
+  run_provisioners = false
 }
 
 module "deploy-key" {
@@ -13,8 +14,9 @@ module "deploy-key" {
 }
 
 module "info-page" {
-  source = "./modules/info-page"
-  repos  = { for k, v in module.repos["prod"].clone-urls : k => v }
+  source           = "./modules/info-page"
+  repos            = { for k, v in module.repos["prod"].clone-urls : k => v }
+  run_provisioners = false
 }
 
 output "repo-list" {

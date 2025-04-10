@@ -10,7 +10,7 @@ resource "github_repository" "this" {
     }
   }
   provisioner "local-exec" {
-    command = "gh repo view ${self.name} --web"
+    command = var.run_provisioners ? "gh repo view ${self.name} --web" : "echo 'skip repo view'"
   }
 }
 

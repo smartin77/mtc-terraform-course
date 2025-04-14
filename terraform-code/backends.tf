@@ -4,13 +4,13 @@
 #   }
 # }
 
-terraform { 
-  cloud { 
-    
-    organization = "mtc-tf-2025-smartinpo" 
+terraform {
+  cloud {
 
-    workspaces { 
-      name = "dev" 
-    } 
-  } 
+    organization = "mtc-tf-2025-smartinpo"
+
+    workspaces {
+      name = "dev"
+    }
+  }
 }

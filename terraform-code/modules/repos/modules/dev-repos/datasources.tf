@@ -1,3 +1,3 @@
 data "github_user" "current" {
-  username = ""
+  username = "smartin77"
 }

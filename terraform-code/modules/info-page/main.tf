@@ -1,6 +1,20 @@
+data "terraform_remote_state" "repos" {
+  backend = "remote"
+  config = {
+    organization = "mtc-tf-2025-smartinpo"
+    workspaces = {
+      name = "mtc-repos"
+    }
+  }
+}
+
+locals {
+  repos = { for k, v in data.terraform_remote_state.repos.outputs.clone_urls["prod"].clone-urls : k => v }
+}
+
 resource "github_repository" "this" {
-  name        = "smartin77_info_page"
-  description = "Repository Information"
+  name        = "mtc_info_page"
+  description = "Repository Information for MTC"
   visibility  = "public"
   auto_init   = true
   pages {
@@ -29,6 +43,6 @@ resource "github_repository_file" "this" {
     avatar = data.github_user.current.avatar_url,
     name   = data.github_user.current.name,
     date   = time_static.this.year,
-    repos  = var.repos
+    repos  = local.repos
   })
 }

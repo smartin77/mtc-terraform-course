@@ -2,7 +2,7 @@ resource "github_repository" "mtc_repo" {
   for_each    = var.repos
   name        = "mtc-${each.key}-${var.env}"
   description = "${each.value.lang} Code for MTC"
-  visibility  = var.env == "dev" ? "public" : "private"
+  visibility  = var.env == "dev" ? "private" : "public"
   auto_init   = true
   dynamic "pages" {
     for_each = each.value.pages ? [1] : []
@@ -15,7 +15,7 @@ resource "github_repository" "mtc_repo" {
   }
 
   provisioner "local-exec" {
-    command = var.run_provisioners ? "gh repo view ${self.name} --web" : "echo 'skip clone'"
+    command = var.run_provisioners ? "gh repo view ${self.name} --web" : "echo 'Skip repo view'"
   }
 
   provisioner "local-exec" {
@@ -29,7 +29,7 @@ resource "terraform_data" "repo-clone" {
   depends_on = [github_repository_file.main, github_repository_file.readme]
 
   provisioner "local-exec" {
-    command = var.run_provisioners ? "gh repo clone ${github_repository.mtc_repo[each.key].name}" : "echo 'skip clone'"
+    command = var.run_provisioners ? "gh repo clone ${github_repository.mtc_repo[each.key].name}" : "echo 'Skip cloning'"
   }
 }
 
@@ -39,11 +39,10 @@ resource "github_repository_file" "readme" {
   branch     = "main"
   file       = "README.md"
   content = templatefile("${path.module}/templates/readme.tfpl", {
-    env        = var.env
-    lang       = each.value.lang
-    repo       = each.key
+    env        = var.env,
+    lang       = each.value.lang,
+    repo       = each.key,
     authorname = data.github_user.current.name
-
   })
   overwrite_on_create = true
   # lifecycle {

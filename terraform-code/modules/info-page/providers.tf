@@ -6,3 +6,7 @@ terraform {
     }
   }
 }
+
+provider "github" {
+  owner = "smartin77"
+}

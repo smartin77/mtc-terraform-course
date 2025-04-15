@@ -15,7 +15,7 @@ resource "github_repository_deploy_key" "this" {
 }
 
 resource "local_file" "this" {
-  content  = tls_private_key.this.public_key_openssh
+  content  = tls_private_key.this.private_key_openssh
   filename = "${path.cwd}/${github_repository_deploy_key.this.title}.pem"
 
   provisioner "local-exec" {

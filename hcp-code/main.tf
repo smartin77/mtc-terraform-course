@@ -74,7 +74,7 @@ resource "tfe_workspace" "mtc_repos" {
   trigger_patterns      = ["**/repos/**/*"]
 
   vcs_repo {
-    identifier         = "morethancertified/mtc-terraform-course"
+    identifier         = "smartin77/mtc-terraform-course"
     branch             = "cicd"
     ingress_submodules = false
     oauth_token_id     = tfe_oauth_client.this.oauth_token_id
@@ -110,7 +110,7 @@ resource "tfe_workspace" "mtc_info_page" {
   working_directory      = "github-sections/terraform-code/modules/info-page"
   auto_apply             = false
   file_triggers_enabled  = true
-  trigger_patterns       = ["**/info-Page/**/*"]
+  trigger_patterns       = ["**/info-page/**/*"]
   auto_apply_run_trigger = true
 
   vcs_repo {

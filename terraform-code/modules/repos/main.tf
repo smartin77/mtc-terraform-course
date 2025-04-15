@@ -23,6 +23,6 @@ output "repo-list" {
   value = flatten([for k, v in module.repos : keys(v.clone-urls) if k == "dev"])
 }
 
-# output "clone_urls" {
-#   value = module.repos
-# }
+output "clone_urls" {
+  value = module.repos
+}

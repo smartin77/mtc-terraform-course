@@ -54,3 +54,42 @@ resource "aws_route_table_association" "this" {
   subnet_id      = aws_subnet.this[each.key].id
   route_table_id = aws_route_table.this.id
 }
+
+resource "aws_lb" "this" {
+  name               = "mtc-ecs-lb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = [for subnet in aws_subnet.this : subnet.id]
+}
+
+resource "aws_lb_listener" "this" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "I'm working, but the tasks aren't"
+      status_code  = "503"
+    }
+  }
+}
+
+resource "aws_security_group" "alb" {
+  vpc_id = aws_vpc.this.id
+  tags = {
+    Name = "mtc-ecs-alb"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "alb" {
+  for_each          = var.allowed_ips
+  security_group_id = aws_security_group.alb.id
+  cidr_ipv4         = each.value
+  from_port         = 80
+  ip_protocol       = "tcp"
+  to_port           = 80
+}

@@ -78,22 +78,32 @@ resource "aws_lb_listener" "this" {
   }
 }
 
-resource "aws_security_group" "alb" {
-  vpc_id = aws_vpc.this.id
-  tags = {
-    Name = "mtc-ecs-alb"
-  }
-}
-
-resource "aws_vpc_security_group_ingress_rule" "alb" {
-  for_each          = var.allowed_ips
-  security_group_id = aws_security_group.alb.id
-  cidr_ipv4         = each.value
-  from_port         = 80
-  ip_protocol       = "tcp"
-  to_port           = 80
-}
-
 resource "aws_ecs_cluster" "this" {
   name = "mtc-ecs-cluster"
 }
+
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "ecsExecutionRole"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+# app security goup
+# ingress rule alb -> app
+# egress rule app -> world
+
+# alb security group
+# egress rule alb -> app

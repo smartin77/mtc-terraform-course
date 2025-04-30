@@ -8,8 +8,18 @@ module "infra" {
 }
 
 module "app" {
-  source              = "./modules/app"
-  ecr_repository_name = "ui"
-  app_path            = "ui"
-  image_version       = "1.0.1"
+  source                = "./modules/app"
+  ecr_repository_name   = "ui"
+  app_path              = "ui"
+  image_version         = "1.0.1"
+  app_name              = "ui"
+  port                  = 80
+  execution_role_arn    = module.infra.execution_role_arn
+  app_security_group_id = module.infra.app_security_group_id
+  subnets               = module.infra.public_subnets
+  cluster_arn           = module.infra.cluster_arn
+  is_public             = true
+  vpc_id                = module.infra.vpc_id
+  path_pattern          = "/*"
+  alb_listener_arn      = module.infra.alb_listener_arn
 }

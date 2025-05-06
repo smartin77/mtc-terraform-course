@@ -48,6 +48,6 @@ variable "alb_listener_arn" {
 }
 
 variable "path_pattern" {
-  type = string
+  type    = string
   default = "/*"
 }

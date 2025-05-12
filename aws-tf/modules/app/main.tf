@@ -21,6 +21,9 @@ resource "terraform_data" "login" {
 }
 
 resource "terraform_data" "build" {
+  triggers_replace = [
+    var.image_version
+  ]
   depends_on = [terraform_data.login]
   provisioner "local-exec" {
     command = <<EOT
@@ -54,7 +57,7 @@ resource "aws_ecs_task_definition" "this" {
   container_definitions = jsonencode([
     {
       name      = var.app_name
-      image     = "${local.ecr_url}:latest"
+      image     = "${local.ecr_url}:${var.image_version}"
       cpu       = 256
       memory    = 512
       essential = true
@@ -89,11 +92,15 @@ resource "aws_ecs_service" "this" {
 }
 
 resource "aws_lb_target_group" "this" {
-  name        = "mtc-ecs-tg"
+  name        = "${var.app_name}-target-group"
   port        = var.port
   protocol    = "HTTP"
-  target_type = "ip"
   vpc_id      = var.vpc_id
+  target_type = "ip"
+  health_check {
+    enabled = true
+    path    = var.healthcheck_path
+  }
 }
 
 resource "aws_lb_listener_rule" "http_rule" {

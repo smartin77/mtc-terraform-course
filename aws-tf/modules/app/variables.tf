@@ -56,3 +56,15 @@ variable "healthcheck_path" {
   type    = string
   default = "/*"
 }
+
+variable "envars" {
+  type = list(map(any))
+}
+
+variable "secrets" {
+  type = list(map(any))
+}
+
+variable "lb_priority" {
+  type = number
+}

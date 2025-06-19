@@ -16,7 +16,7 @@ resource "null_resource" "dockervol" {
 }
 
 resource "docker_image" "nodered_image" {
-  name = "nodered/node-red:latest"
+  name = lookup(var.image, var.env)
 }
 
 resource "random_string" "random" {
@@ -32,10 +32,10 @@ resource "docker_container" "nodered_container" {
   image = docker_image.nodered_image.latest
   ports {
     internal = var.port_internal
-    external = var.port_external[count.index]
+    external = lookup(var.port_external, var.env)[count.index]
   }
   volumes {
     container_path = "/data"
-    host_path = "/home/smartin/dev/mtc-terraform-course/terraform-docker/noderedvol"
+    host_path      = "${path.cwd}/noderedvol"
   }
 }

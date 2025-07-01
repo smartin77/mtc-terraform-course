@@ -20,25 +20,3 @@ module "container" {
   container_path_in = "/data"
   host_path_in      = "${path.cwd}/noderedvol"
 }
-
-# module "container" {
-#   source = "./container"
-#   count = local.container_count
-#   name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-#   image_in = module.image.image_out
-#   int_port_in       = var.port_internal
-#   ext_port_in       = var.port_external[terraform.workspace][count.index]
-#   container_path_in = "/data"
-#   host_path_in      = "${path.cwd}/noderedvol"
-# }
-
-# module "docker_container" {
-#   source            = "./container"
-#   count             = local.container_count
-#   name_in           = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-#   image_in          = module.image.image_out
-#   int_port_in       = var.port_internal
-#   ext_port_in       = var.port_external[terraform.workspace][count.index]
-#   container_path_in = "/data"
-#   host_path_in      = "${path.cwd}/noderedvol"
-# }

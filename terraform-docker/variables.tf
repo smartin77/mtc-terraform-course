@@ -1,5 +1,5 @@
 variable "image" {
-  type        = map
+  type        = map(any)
   description = "image for container"
 
   default = {
@@ -13,7 +13,7 @@ locals {
 }
 
 variable "port_external" {
-  type = map
+  type = map(any)
 
   validation {
     condition     = max(var.port_external["dev"]...) <= 65535 && min(var.port_external["dev"]...) >= 1980

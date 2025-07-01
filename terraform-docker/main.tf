@@ -1,22 +1,6 @@
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 2.8.0"
-    }
-  }
-}
-
-provider "docker" {}
-
-resource "null_resource" "dockervol" {
-  provisioner "local-exec" {
-    command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
-  }
-}
-
-resource "docker_image" "nodered_image" {
-  name = var.image[terraform.workspace]
+module "image" {
+  source   = "./image"
+  image_in = var.image[terraform.workspace]
 }
 
 resource "random_string" "random" {
@@ -26,16 +10,35 @@ resource "random_string" "random" {
   upper   = false
 }
 
-resource "docker_container" "nodered_container" {
-  count = local.container_count
-  name  = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-  image = docker_image.nodered_image.latest
-  ports {
-    internal = var.port_internal
-    external = var.port_external[terraform.workspace][count.index]
-  }
-  volumes {
-    container_path = "/data"
-    host_path      = "${path.cwd}/noderedvol"
-  }
+module "container" {
+  source            = "./container"
+  count             = local.container_count
+  name_in           = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+  image_in          = module.image.image_out
+  int_port_in       = var.port_internal
+  ext_port_in       = var.port_external[terraform.workspace][count.index]
+  container_path_in = "/data"
+  host_path_in      = "${path.cwd}/noderedvol"
 }
+
+# module "container" {
+#   source = "./container"
+#   count = local.container_count
+#   name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+#   image_in = module.image.image_out
+#   int_port_in       = var.port_internal
+#   ext_port_in       = var.port_external[terraform.workspace][count.index]
+#   container_path_in = "/data"
+#   host_path_in      = "${path.cwd}/noderedvol"
+# }
+
+# module "docker_container" {
+#   source            = "./container"
+#   count             = local.container_count
+#   name_in           = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+#   image_in          = module.image.image_out
+#   int_port_in       = var.port_internal
+#   ext_port_in       = var.port_external[terraform.workspace][count.index]
+#   container_path_in = "/data"
+#   host_path_in      = "${path.cwd}/noderedvol"
+# }

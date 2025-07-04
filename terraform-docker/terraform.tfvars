@@ -1,5 +1,14 @@
-#port_external = [1880, 1881, 1882]
 port_external = {
-    dev = [1980, 1981]
-    prod = [1880, 1881]
+  nodered = {
+    dev  = [1980]
+    prod = [1880]
+  }
+  influxdb = {
+    dev  = [8186]
+    prod = [8086]
+  }
+  grafana = {
+    dev  = [3100]
+    prod = [3000]
+  }
 }

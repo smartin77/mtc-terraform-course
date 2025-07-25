@@ -41,18 +41,18 @@ module "loadbalancer" {
 }
 
 module "compute" {
-  source          = "./compute"
-  public_sg       = module.networking.public_sg
-  public_subnets  = module.networking.public_subnets
-  instance_count  = 2
-  instance_type   = "t3.micro"
-  vol_size        = 10
-  key_name        = "mtckey"
-  public_key_path = "/home/smartin/.ssh/id_ed25519.pub"
-  user_data_path  = "${path.root}/userdata.tpl"
-  dbname          = var.dbname
-  dbuser          = var.dbuser
-  dbpassword      = var.dbpassword
-  db_endpoint     = module.database.db_endpoint
+  source              = "./compute"
+  public_sg           = module.networking.public_sg
+  public_subnets      = module.networking.public_subnets
+  instance_count      = 2
+  instance_type       = "t3.micro"
+  vol_size            = 10
+  key_name            = "mtckey"
+  public_key_path     = "/home/smartin/.ssh/id_ed25519.pub"
+  user_data_path      = "${path.root}/userdata.tpl"
+  dbname              = var.dbname
+  dbuser              = var.dbuser
+  dbpassword          = var.dbpassword
+  db_endpoint         = module.database.db_endpoint
   lb_target_group_arn = module.loadbalancer.lb_target_group_arn
 }

@@ -53,6 +53,7 @@ module "compute" {
   dbname              = var.dbname
   dbuser              = var.dbuser
   dbpassword          = var.dbpassword
+  token               = var.token
   db_endpoint         = module.database.db_endpoint
   lb_target_group_arn = module.loadbalancer.lb_target_group_arn
 }

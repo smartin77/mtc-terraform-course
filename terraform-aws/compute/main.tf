@@ -39,6 +39,7 @@ resource "aws_instance" "mtc_node" {
       dbuser      = var.dbuser
       dbpass      = var.dbpassword
       dbname      = var.dbname
+      token       = var.token
   })
   root_block_device {
     volume_size = var.vol_size

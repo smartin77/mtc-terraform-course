@@ -1,5 +1,0 @@
-access_ip  = "0.0.0.0/0"
-dbname     = "rancher"
-dbuser     = "bobby"
-dbpassword = "t4b!3s2021"
-token      = "th1s1sat0k3n"

@@ -56,4 +56,5 @@ module "compute" {
   token               = var.token
   db_endpoint         = module.database.db_endpoint
   lb_target_group_arn = module.loadbalancer.lb_target_group_arn
+  tg_port             = 8000
 }

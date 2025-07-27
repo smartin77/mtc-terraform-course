@@ -12,3 +12,4 @@ variable "dbpassword" {}
 variable "db_endpoint" {}
 variable "token" {}
 variable "lb_target_group_arn" {}
+variable "tg_port" {}
